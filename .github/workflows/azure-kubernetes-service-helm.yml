@@ -5,7 +5,7 @@ name: Build and deploy an app to AKS with Helm
             - main
     workflow_dispatch: null
 env:
-    AZURE_CONTAINER_REGISTRY: aymericacr.azurecr.io
+    AZURE_CONTAINER_REGISTRY: aymericacr
     CHART_OVERRIDE_PATH: ./charts/production.yaml
     CHART_PATH: ./charts
     CLUSTER_NAME: aymericaks
@@ -28,7 +28,7 @@ jobs:
                 tenant-id: ${{ secrets.AZURE_TENANT_ID }}
             - name: Build and push image to ACR
               run: |
-                az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
+                az acr build --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.RESOURCE_GROUP }} .
     createSecret:
         permissions:
             contents: read
@@ -60,7 +60,7 @@ jobs:
               uses: Azure/k8s-create-secret@v1.1
               with:
                 container-registry-password: ${{ steps.get-acr-creds.outputs.password }}
-                container-registry-url: ${{ env.AZURE_CONTAINER_REGISTRY }}
+                container-registry-url: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io
                 container-registry-username: ${{ steps.get-acr-creds.outputs.username }}
                 secret-name: ${{ env.IMAGE_PULL_SECRET_NAME }}
     deploy:
@@ -101,5 +101,5 @@ jobs:
                 action: deploy
                 imagepullsecrets: ${{ env.IMAGE_PULL_SECRET_NAME }}
                 images: |
-                    ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+                    ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
                 manifests: ${{ steps.bake.outputs.manifestsBundle }}
