@@ -9,8 +9,8 @@ env:
     CHART_OVERRIDE_PATH: ./charts/production.yaml
     CHART_PATH: ./charts
     CLUSTER_NAME: aymericaks
-    CONTAINER_NAME: hello-world
-    IMAGE_PULL_SECRET_NAME: aymericacr.azurecr.iosecret
+    CONTAINER_NAME: node
+    IMAGE_PULL_SECRET_NAME: aymericacrsecret
     RESOURCE_GROUP: aymericrg
 jobs:
     buildImage:

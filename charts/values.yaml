@@ -1,4 +1,4 @@
-# Default values for hello-world.
+# Default values for node.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -7,7 +7,7 @@ replicaCount: 1
 containerPort: 3000
 
 imageKey:
-  repository: hello-world
+  repository: node
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
